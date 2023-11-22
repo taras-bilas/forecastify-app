@@ -1,10 +1,10 @@
-import axios from "axios";
+import axios from 'axios';
 
 const APIKEY = "b24aa52f364ac2575e59e986ffb74fec";
 
 export function getCityCoordinates(cityName) {
   return axios.get(
-    `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=${1}&appid=${APIKEY}`
+    `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=${1}&appid=${APIKEY}`
   );
 }
 

@@ -20,7 +20,6 @@ export default {
     const fetchWeatherData = async () => {
       await getHourlyTemperature(cityName.value)
         .then(response => {
-          console.log(response.data);
           processWeatherData(response.data);
         })
         .catch(error => {
@@ -49,32 +48,34 @@ export default {
     };
 
     const renderChart = () => {
-      if (chartInstance.value) {
-        chartInstance.value.destroy();
-      }
-
       const ctx = chartCanvas.value.getContext('2d');
 
-      chartInstance.value = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: labels.value,
-          datasets: [{
-            label: 'Temperature (°C)',
-            data: temperatureData.value,
-            borderColor: 'blue',
-            backgroundColor: 'rgba(0, 0, 255, 0.1)',
-            borderWidth: 1
-          }]
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: false
+      if (ctx) {
+        if (chartInstance.value) {
+          chartInstance.value.destroy();
+        }
+
+        chartInstance.value = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels.value,
+            datasets: [{
+              label: 'Temperature (°C)',
+              data: temperatureData.value,
+              borderColor: 'blue',
+              backgroundColor: 'rgba(0, 0, 255, 0.1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: false
+              }
             }
           }
-        }
-      });
+        });
+      }
     };
 
     onMounted(() => {

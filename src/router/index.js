@@ -1,10 +1,10 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import Home from '../views/Home.vue';
-import Favorites from '../views/Favorites.vue';
+import HomeView from './../views/HomeView.vue';
+import FavoritesView from './../views/FavoritesView.vue';
 
 const routes = [
-  { path: "/", component: Home },
-  { path: "/favorites", component: Favorites },
+  { path: "/", component: HomeView },
+  { path: "/favorites", component: FavoritesView },
 ];
 
 const router = createRouter({

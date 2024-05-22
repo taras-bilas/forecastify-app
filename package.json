@@ -12,13 +12,10 @@
   "dependencies": {
     "@vueuse/core": "^10.6.1",
     "axios": "^1.6.0",
-    "chart.js": "^3.9.1",
     "pinia": "^2.1.7",
     "sass": "^1.69.5",
     "vue": "^3.3.8",
-    "vue-router": "^4.2.5",
-    "vue-skeleton-loader": "^1.0.0",
-    "vue-spinners": "^1.0.2"
+    "vue-router": "^4.2.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.4.0",

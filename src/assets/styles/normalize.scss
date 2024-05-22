@@ -1,3 +1,5 @@
+@import './../../utils/variables.scss';
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -8,5 +10,5 @@ html {
 }
 
 body {
-  background-color: #424242;
+  background-color: $page-bc;
 }

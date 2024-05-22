@@ -1,23 +1,28 @@
 <script>
-import { useWeatherStore } from './../stores/pinia';
 import { ref, watchEffect } from 'vue';
-import HourlyTemperatureGraph from './HourlyTemperatureGraph.vue';
+import { useMainStore } from '../stores/pinia';
 
 export default {
-  components: {
-    HourlyTemperatureGraph,
+  props: {
+    weatherInfo: {
+      type: Object,
+    }
   },
-  setup() {
-    const weatherStore = useWeatherStore();
+  setup(props) {
+    const mainStore = useMainStore();
 
-    const weatherInfo = ref(weatherStore.weatherInfo);
+    const weatherInfo = ref(props.weatherInfo);
+    const currentTime = ref(mainStore.currentTime);
+    const roundValue = ref(mainStore.roundValue);
 
     watchEffect(() => {
-      weatherInfo.value = weatherStore.weatherInfo;
+      weatherInfo.value = props.weatherInfo;
     });
 
     return {
       weatherInfo,
+      currentTime,
+      roundValue,
     }
   }
 }
@@ -25,67 +30,93 @@ export default {
 
 <template>
   <div class="weather-info" v-if="Object.keys(weatherInfo).length > 0">
-    <div class="weather-info__container">
-      <div class="weather-info__info info">
-        <h1 class="info__city-name">{{ weatherInfo.name }}</h1>
+    <div class="weather-info__content">
+      <div class="info">
+        <h1 class="info__city-name">
+          {{ weatherInfo.name }}
+        </h1>
+
         <h2 class="info__today">
-          Today, {{ String(new Date().getHours()).padStart(2, '0') }}:{{ String(new Date().getMinutes()).padStart(2, '0')
-          }}
+          Today, {{ currentTime }}
         </h2>
-        <p class="info__temperature" v-if="weatherInfo.main.temp">{{ Math.round(weatherInfo.main.temp) }}&deg;C</p>
-        <p class="info__feels-like">Feels like: {{ Math.round(weatherInfo.main.feels_like) }}&deg;C</p>
-        <p class="info__max-temperature">Max temperature: {{ Math.round(weatherInfo.main.temp_max) }}&deg;C</p>
-        <p class="info__min-temperature">Min temperature: {{ Math.round(weatherInfo.main.temp_min) }}&deg;C</p>
-        <p class="info__humidity">Humidity: {{ weatherInfo.main.humidity }}%</p>
-        <p class="info__pressure">Pressure: {{ weatherInfo.main.pressure }} hPa</p>
-        <p class="info__wind-speed">Wind speed: {{ Math.round(weatherInfo.wind.speed) }} m/s</p>
+
+        <p class="info__temperature" v-if="weatherInfo.main.temp">
+          {{ roundValue(weatherInfo.main.temp) }}&deg;C
+        </p>
+
+        <p class="info__feels-like">
+          Feels like: {{ roundValue(weatherInfo.main.feels_like) }}&deg;C
+        </p>
+
+        <p class="info__max-temperature">
+          Max temperature: {{ roundValue(weatherInfo.main.temp_max) }}&deg;C
+        </p>
+
+        <p class="info__min-temperature">
+          Min temperature: {{ roundValue(weatherInfo.main.temp_min) }}&deg;C
+        </p>
+
+        <p class="info__humidity">
+          Humidity: {{ roundValue(weatherInfo.main.humidity) }}%
+        </p>
+
+        <p class="info__pressure">
+          Pressure: {{ roundValue(weatherInfo.main.pressure) }} hPa
+        </p>
+
+        <p class="info__wind-speed">
+          Wind speed: {{ roundValue(weatherInfo.wind.speed) }} m/s
+        </p>
       </div>
-      <div class="weather-info__images images">
-        <img
-          :src="`https://openweathermap.org/img/w/${weatherInfo.weather[0].icon}.png`"
-          alt="Weather image"
-          class="images__image"
-        >
-        <HourlyTemperatureGraph class="images__graph" />
-      </div>
+
+      <img
+        :src="`https://openweathermap.org/img/w/${weatherInfo.weather[0].icon}.png`"
+        alt="Weather image"
+        class="weather-info__image"
+      >
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
+@import './../utils/variables';
+
 .weather-info {
   display: flex;
   justify-content: center;
-  margin: 20px 0 40px;
-  color: #bbb;
+  margin-top: 20px;
+  margin-bottom: 40px;
+  color: $main-color;
 
-  &__container {
+  &__content {
     display: flex;
+    align-items: center;
+    gap: 10px;
 
-    @media (max-width: 767px) {
-      padding: 0 20px;
+    @media (min-width: $tablet-min-width) {
+      gap: 60px;
+    }
+  }
+
+  &__image {
+    width: 120px;
+    height: 120px;
+
+    @media (min-width: $tablet-min-width) {
+      width: 150px;
+      height: 150px;
     }
   }
 }
 
 .info {
-  @media (max-width: 767px) {
-    margin-right: 10px;
-  }
-
-  @media (min-width: 768px) {
-    margin-right: 60px;
-  }
 
   &__city-name,
   &__temperature {
     font-weight: 500;
+    font-size: 25px;
 
-    @media (max-width: 767px) {
-      font-size: 25px;
-    }
-
-    @media (min-width: 768px) {
+    @media (min-width: $tablet-min-width) {
       font-size: 35px;
     }
   }
@@ -93,12 +124,9 @@ export default {
   &__today {
     margin-bottom: 30px;
     font-weight: 400;
+    font-size: 15px;
 
-    @media (max-width: 767px) {
-      font-size: 15px;
-    }
-
-    @media (min-width: 768px) {
+    @media (min-width: $tablet-min-width) {
       font-size: 25px;
     }
   }
@@ -121,42 +149,10 @@ export default {
   &__humidity,
   &__pressure,
   &__wind-speed {
-    @media (max-width: 767px) {
-      font-size: 15px;
-    }
+    font-size: 15px;
 
-    @media (min-width: 768px) {
+    @media (min-width: $tablet-min-width) {
       font-size: 20px;
-    }
-  }
-}
-
-.images {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  &__image {
-    @media (max-width: 767px) {
-      width: 120px;
-      height: 120px;
-    }
-
-    @media (min-width: 768px) {
-      width: 150px;
-      height: 150px;
-    }
-  }
-
-  &__graph {
-    @media (max-width: 767px) {
-      width: 150px;
-      height: 150px;
-    }
-
-    @media (min-width: 768px) {
-      width: 180px;
-      height: 180px;
     }
   }
 }

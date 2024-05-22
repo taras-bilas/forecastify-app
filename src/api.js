@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const APIKEY = "b24aa52f364ac2575e59e986ffb74fec";
+const APIKEY = "65b15aca840f7067473448e50a54596e";
 
 export function getCityCoordinates(cityName) {
   return axios.get(

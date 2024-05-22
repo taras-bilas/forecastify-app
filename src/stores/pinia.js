@@ -1,11 +1,34 @@
 import { defineStore } from 'pinia';
 
+export const useMainStore = defineStore('main', {
+  state: () => ({}),
+  actions: {
+    roundValue(value) {
+      return Math.round(value);
+    },
+    getHours() {
+      return `${new Date().getHours()}`.padStart(2, '0');
+    },
+    getMinutes() {
+      return `${new Date().getMinutes()}`.padStart(2, '0');
+    },
+    getCurrentTime() {
+      return `${this.getHours()}:${this.getMinutes()}`;
+    },
+  },
+  getters: {
+    currentTime() {
+      return this.getCurrentTime();
+    },
+  },
+});
+
 export const useWeatherStore = defineStore('weather', {
   state: () => ({
     cityName: '',
     weatherInfo: {},
-    citiesWeather: [],
-    favorites: [],
+    cities: [],
+    favoriteCities: [],
     favoriteWeatherInfo: {},
     cardIndex: null,
     cardIsBeingDeleted: false,
@@ -17,11 +40,11 @@ export const useWeatherStore = defineStore('weather', {
     setWeatherInfo(weatherInfo) {
       this.weatherInfo = weatherInfo;
     },
-    setCitiesWeather(citiesWeather) {
-      this.citiesWeather = citiesWeather;
+    setCities(cities) {
+      this.cities = cities;
     },
-    setFavorites(favorites) {
-      this.favorites = favorites;
+    setFavoriteCities(favoriteCities) {
+      this.favoriteCities = favoriteCities;
     },
     setFavoriteWeatherInfo(favoriteWeatherInfo) {
       this.favoriteWeatherInfo = favoriteWeatherInfo;
@@ -56,7 +79,7 @@ export const useFocusStore = defineStore('focus', {
 export const useModalStore = defineStore('modal', {
   state: () => ({
     isModalOpen: false,
-    modalText: "",
+    modalText: '',
   }),
   actions: {
     setIsModalOpen(isModalOpen) {
